@@ -11,7 +11,7 @@ public class Program
 {
     private readonly static DiscordSocketClient _client = new DiscordSocketClient();
     private readonly static IConfigurationRoot _config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
-
+    //teste
     public static Task Main() => new Program().MainAsync();
 
     public async Task MainAsync()
