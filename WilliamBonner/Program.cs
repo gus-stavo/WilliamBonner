@@ -1,38 +1,78 @@
 ﻿using Discord;
 using RestSharp;
-using WilliamBonner;
 using HtmlAgilityPack;
 using Newtonsoft.Json;
 using Discord.WebSocket;
 using System.Globalization;
 using Microsoft.Extensions.Configuration;
+using WilliamBonner.Models;
+using Discord.Commands;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 public class Program
 {
-    private readonly static DiscordSocketClient _client = new DiscordSocketClient();
-    private readonly static IConfigurationRoot _config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
+    public static void Main() => new Program().MainAsync().GetAwaiter().GetResult();
 
-    public static Task Main() => new Program().MainAsync();
+    private DiscordSocketConfig _discordConfig;
+    private DiscordSocketClient _client;
+    private CommandService _commands;
+    private IServiceProvider _services;
+    private IConfigurationRoot _config;
 
     public async Task MainAsync()
     {
+        _discordConfig = new DiscordSocketConfig()
+        {
+            GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent
+        };
+
+        _config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
+
+        _client = new DiscordSocketClient(_discordConfig);
+        _commands = new CommandService();
+
+        _services = new ServiceCollection()
+            .AddSingleton(_client)
+            .AddSingleton(_commands)
+            .BuildServiceProvider();
+
         _client.Log += Log;
 
+        await RegisteCommandsAsync();
         await _client.LoginAsync(TokenType.Bot, _config["Discord:Token"]);
         await _client.StartAsync();
-        await SendDailyMessage();
+        await Task.Delay(-1);
     }
 
-    private async static Task SendDailyMessage()
+    private Task Log(LogMessage message)
     {
-        string dailyMessage = GetDailyMessage();
-
-        ulong id = 854378830957641779;
-        var channel = _client.GetChannel(id) as IMessageChannel;
-        await channel!.SendMessageAsync(dailyMessage);
+        Console.WriteLine(message);
+        return Task.CompletedTask;
     }
 
-    private static string GetDailyMessage()
+    public async Task RegisteCommandsAsync() 
+    {
+        _client.MessageReceived += HandleCommandAsync;
+        await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
+    }
+
+    private async Task HandleCommandAsync(SocketMessage arg) 
+    {
+        var message = arg as SocketUserMessage;
+        var context = new SocketCommandContext(_client, message);
+        if (message.Author.IsBot) return;
+
+        int argPos = 0;
+        if (message.HasStringPrefix("-", ref argPos)) 
+        {
+            var result = await _commands.ExecuteAsync(context, argPos, _services);
+            if (!result.IsSuccess) Console.WriteLine(result.ErrorReason);
+        }
+    }
+
+    #region dailyMessage
+    public static string GetDailyMessage()
     {
         List<Holiday> holidaysToday = GetHolidaysToday();
         string formattedHolidays = FormatHolidays(holidaysToday);
@@ -82,12 +122,11 @@ Euro: {formattedEuroCurrency}
 
     private static List<Holiday> GetHolidays()
     {
-        string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "holidays.json");
+        string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Utils/holidays.json");
         using var reader = new StreamReader(path);
         string json = reader.ReadToEnd();
         return JsonConvert.DeserializeObject<List<Holiday>>(json)!;
     }
-
 
     private static List<Holiday> GetHolidaysToday()
     {
@@ -116,7 +155,6 @@ Euro: {formattedEuroCurrency}
 
         return formattedHolidays.Remove(formattedHolidays.Length - 1, 1);
     }
-
 
     private static string GetRandomZodiac()
     {
@@ -157,7 +195,6 @@ Euro: {formattedEuroCurrency}
         return node.InnerText;
     }
 
-
     private static Currencies GetCurrencies()
     {
         var client = new RestClient("https://economia.awesomeapi.com.br/last/USD-BRL,EUR-BRL");
@@ -182,7 +219,6 @@ Euro: {formattedEuroCurrency}
         }
     }
 
-
     private static string GetTodaysPhrase()
     {
         var url = "https://frasedodia.net";
@@ -195,7 +231,6 @@ Euro: {formattedEuroCurrency}
 
         return node.InnerText.Trim();
     }
-
 
     private static List<string> GetNews()
     {
@@ -239,7 +274,6 @@ Euro: {formattedEuroCurrency}
         return formattedNews.Remove(formattedNews.Length - 1, 1);
     }
 
-
     private static WeatherForecast GetWeatherForecast(WeatherForecastCity city)
     {
         string woeid = "";
@@ -257,11 +291,5 @@ Euro: {formattedEuroCurrency}
         var response = client.Execute(request);
         return JsonConvert.DeserializeObject<WeatherForecast>(response.Content!)!;
     }
-
-
-    private Task Log(LogMessage message)
-    {
-        Console.WriteLine(message.ToString());
-        return Task.CompletedTask;
-    }
+    #endregion 
 }

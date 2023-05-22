@@ -2,26 +2,32 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <UserSecretsId>ad304efe-599a-4ddb-835f-7e0c39904ec3</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Discord.Net.Core" Version="3.8.1" />
-    <PackageReference Include="Discord.Net.WebSocket" Version="3.8.1" />
+    <PackageReference Include="Discord.Net.Commands" Version="3.10.0" />
+    <PackageReference Include="Discord.Net.Core" Version="3.10.0" />
+    <PackageReference Include="Discord.Net.WebSocket" Version="3.10.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="7.0.0" />
-    <PackageReference Include="RestSharp" Version="108.0.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+    <PackageReference Include="RestSharp" Version="110.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="holidays.json">
+    <None Update="Utils\holidays.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties holidays_1json__JsonSchema="[" /></VisualStudio></ProjectExtensions>
+  <ItemGroup>
+    <Folder Include="Functions\" />
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>
