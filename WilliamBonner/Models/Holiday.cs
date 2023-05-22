@@ -1,4 +1,4 @@
-﻿namespace WilliamBonner
+﻿namespace WilliamBonner.Models
 {
     internal class Holiday
     {
