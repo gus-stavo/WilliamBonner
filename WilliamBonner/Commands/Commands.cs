@@ -1,5 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using Discord.Commands;
+using HtmlAgilityPack;
+using WilliamBonner.Models;
 
 namespace Commands.Commands
 {
@@ -41,5 +46,21 @@ namespace Commands.Commands
             await ReplyAsync($"{sResult.Substring(0, sResult.Length - 3)}");
         }
         #endregion
+
+        [Command("horoscopo")]
+        public async Task sign(string sign)
+        {
+                var formattedZodiac = Program.FormatZodiac(sign);
+
+                var horoscope = Program.GetHoroscope(sign);
+
+                var message = @$"**DELETE * FROM**
+{DateTime.Now:dd/MM/yy}
+
+**Horoscopo de {formattedZodiac}:** {horoscope}
+";
+
+                await ReplyAsync($"{message}");
+            }
     }
 }
