@@ -162,27 +162,27 @@ Euro: {formattedEuroCurrency}
         return zodiacs[new Random().Next(0, zodiacs.Length)];
     }
 
-    private static string FormatZodiac(string zodiac)
+    public static string FormatZodiac(string zodiac)
     {
         switch (zodiac)
         {
-            case "virgem": return "Virgem :virgo:";
-            case "aries": return "Áries :aries:";
-            case "touro": return "Touro :taurus:";
-            case "gemeos": return "Gêmeos :gemini:";
-            case "cancer": return "Câncer :cancer:";
-            case "leao": return "Leão :leo:";
-            case "libra": return "Libra :libra:";
-            case "escorpiao": return "Escorpião :scorpius:";
-            case "sagitario": return "Sagitário :sagittarius:";
-            case "capricornio": return "Capricórnio :capricorn:";
-            case "aquario": return "Aquário :aquarius:";
-            case "peixes": return "Peixes :pisces:";
+            case "virgem": return "Virgem ♍";
+            case "aries": return "Áries ♈";
+            case "touro": return "Touro ♉";
+            case "gemeos": return "Gêmeos ♊";
+            case "cancer": return "Câncer ♋";
+            case "leao": return "Leão ♌";
+            case "libra": return "Libra ♎";
+            case "escorpiao": return "Escorpião ♏";
+            case "sagitario": return "Sagitário ♐";
+            case "capricornio": return "Capricórnio ♑";
+            case "aquario": return "Aquário ♒";
+            case "peixes": return "Peixes ♓";
             default: throw new Exception("Unknow zodiac");
         }
     }
 
-    private static string GetHoroscope(string zodiac)
+    public static string GetHoroscope(string zodiac)
     {
         var url = $"https://www.uol.com.br/universa/horoscopo/{zodiac}/horoscopo-do-dia";
         var web = new HtmlWeb();
