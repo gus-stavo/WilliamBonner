@@ -51,20 +51,20 @@ public class Program
         return Task.CompletedTask;
     }
 
-    public async Task RegisteCommandsAsync() 
+    public async Task RegisteCommandsAsync()
     {
         _client.MessageReceived += HandleCommandAsync;
         await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
     }
 
-    private async Task HandleCommandAsync(SocketMessage arg) 
+    private async Task HandleCommandAsync(SocketMessage arg)
     {
         var message = arg as SocketUserMessage;
         var context = new SocketCommandContext(_client, message);
         if (message.Author.IsBot) return;
 
         int argPos = 0;
-        if (message.HasStringPrefix("-", ref argPos)) 
+        if (message.HasStringPrefix("-", ref argPos))
         {
             var result = await _commands.ExecuteAsync(context, argPos, _services);
             if (!result.IsSuccess) Console.WriteLine(result.ErrorReason);
@@ -221,49 +221,68 @@ Euro: {formattedEuroCurrency}
 
     private static string GetTodaysPhrase()
     {
-        var url = "https://frasedodia.net";
-        var web = new HtmlWeb();
-        var doc = web.Load(url);
+        try
+        {
+            var url = "https://frasedodia.net";
+            var web = new HtmlWeb();
+            var doc = web.Load(url);
 
-        var node = doc
-            .DocumentNode
-            .SelectSingleNode("/html/body/div[3]/div/div/div/div[1]/div/div[1]/a");
+            var node = doc
+                .DocumentNode
+                .SelectSingleNode("/html/body/div[3]/div/div/div/div[1]/div/div[1]/a");
 
-        return node.InnerText.Trim();
+            return node.InnerText.Trim();
+        }
+        catch (Exception)
+        {
+            return "Sem frase do dia hoje :(";
+        }
     }
 
     private static List<string> GetNews()
     {
-        var url = "https://www.cnnbrasil.com.br";
-        var web = new HtmlWeb();
-        var doc = web.Load(url);
-        var news = new List<string>();
-
-        var latestNewsNode = doc
-            .DocumentNode
-            .SelectSingleNode("//h2[@class='home__title headline__primary_title']");
-
-        var latestNews = latestNewsNode.InnerText.Trim().Replace("&quot;", @"""");
-        news.Add(latestNews);
-
-        var otherNewsNode = doc
-            .DocumentNode
-            .SelectNodes("//ul[@class='headline__primary_list']/li");
-
-        if (otherNewsNode != null)
+        try
         {
-            foreach (var liNode in otherNewsNode)
-            {
-                var newsDescription = liNode.InnerText.Trim().Replace("&quot;", @"""");
-                news.Add(newsDescription);
-            }
-        }
+            var url = "https://www.cnnbrasil.com.br";
+            var web = new HtmlWeb();
+            var doc = web.Load(url);
+            var news = new List<string>();
 
-        return news;
+            var latestNewsNode = doc
+                .DocumentNode
+                .SelectSingleNode("//h2[@class='home__title headline__primary_title']");
+
+            var latestNews = latestNewsNode.InnerText.Trim().Replace("&quot;", @"""");
+            news.Add(latestNews);
+
+            var otherNewsNode = doc
+                .DocumentNode
+                .SelectNodes("//ul[@class='headline__primary_list']/li");
+
+            if (otherNewsNode != null)
+            {
+                foreach (var liNode in otherNewsNode)
+                {
+                    var newsDescription = liNode.InnerText.Trim().Replace("&quot;", @"""");
+                    news.Add(newsDescription);
+                }
+            }
+
+            return news;
+        }
+        catch (Exception)
+        {
+            return new List<string>();
+        }
     }
 
     private static string FormatNews(List<string> news)
     {
+        if (news.Count == 0)
+        {
+            return "";
+        }
+
         string formattedNews = "";
 
         foreach (var item in news)
@@ -291,5 +310,5 @@ Euro: {formattedEuroCurrency}
         var response = client.Execute(request);
         return JsonConvert.DeserializeObject<WeatherForecast>(response.Content!)!;
     }
-    #endregion 
+    #endregion
 }
