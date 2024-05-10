@@ -25,14 +25,13 @@ public class CoinflipCommand : ModuleBase<SocketCommandContext>
 
     private static string FlipCoin(int count)
     {
-        StringBuilder result = new StringBuilder();
-
         Random random = new Random();
+        string[] results = new string[count];
         for (int i = 0; i < count; i++)
         {
-            result.Append(random.Next(2) == 0 ? "Cara - " : "Coroa - ");
+            results[i] = random.Next(2) == 0 ? "Cara" : "Coroa";
         }
 
-        return result.ToString().TrimEnd(' ', '-');
+        return string.Join(" - ", results);
     }
 }
