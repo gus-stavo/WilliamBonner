@@ -1,5 +1,4 @@
 ﻿using Discord.Commands;
-using System.Text;
 
 namespace WilliamBonner.Commands;
 
