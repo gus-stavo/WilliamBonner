@@ -1,8 +1,7 @@
-﻿namespace WilliamBonner.Models
+﻿namespace WilliamBonner.Models;
+
+public class Holiday
 {
-    internal class Holiday
-    {
-        public string Date { get; set; } = "";
-        public string Name { get; set; } = "";
-    }
+    public string Date { get; set; } = "";
+    public string Name { get; set; } = "";
 }

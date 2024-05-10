@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Functions\**" />
+    <EmbeddedResource Remove="Functions\**" />
+    <None Remove="Functions\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Discord.Net.Commands" Version="3.10.0" />
     <PackageReference Include="Discord.Net.Core" Version="3.10.0" />
     <PackageReference Include="Discord.Net.WebSocket" Version="3.10.0" />
@@ -22,10 +28,6 @@
     <None Update="Utils\holidays.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Functions\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
