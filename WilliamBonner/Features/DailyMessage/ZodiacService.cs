@@ -4,6 +4,8 @@ namespace WilliamBonner.Features.DailyMessage;
 
 public class ZodiacService
 {
+    public static readonly string[] Zodiacs = { "virgem", "aries", "touro", "gemeos", "cancer", "leao", "libra", "escorpiao", "sagitario", "capricornio", "aquario", "peixes" };
+
     public static string GetHoroscopeMessage()
     {
         string randomZodiac = GetRandomZodiac();
@@ -15,8 +17,7 @@ public class ZodiacService
 
     private static string GetRandomZodiac()
     {
-        string[] zodiacs = { "virgem", "aries", "touro", "gemeos", "cancer", "leao", "libra", "escorpiao", "sagitario", "capricornio", "aquario", "peixes" };
-        return zodiacs[new Random().Next(0, zodiacs.Length)];
+        return Zodiacs[new Random().Next(0, Zodiacs.Length)];
     }
 
     public static string FormatZodiac(string zodiac)
