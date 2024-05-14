@@ -25,6 +25,7 @@ public class Program
         };
 
         _config = new ConfigurationBuilder().AddUserSecrets<Program>().Build();
+        Config.Init(_config);
 
         _client = new DiscordSocketClient(_discordConfig);
         _commands = new CommandService();
@@ -37,7 +38,7 @@ public class Program
         _client.Log += Log;
 
         await RegisteCommandsAsync();
-        await _client.LoginAsync(TokenType.Bot, _config["Discord:Token"]);
+        await _client.LoginAsync(TokenType.Bot, Config.DiscordToken);
         await _client.StartAsync();
         await Task.Delay(-1);
     }
