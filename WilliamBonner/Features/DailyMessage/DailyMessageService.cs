@@ -6,8 +6,8 @@ public static class DailyMessageService
     {
         string holidayMessage = HolidayService.GetHolidaysMessage();
         string currenciesMessage = CurrencyService.GetCurrenciesMessage();
-        string todaysPhrase = PhraseService.GetTodaysPhrase();
-        string news = await NewsService.GetNewsMessage();
+        string todaysPhraseMessage = PhraseService.GetTodaysPhrase();
+        string newsMessage = await NewsService.GetNewsMessage();
         string horoscopeMessage = ZodiacService.GetHoroscopeMessage();
 
         string weatherForecastMessage = WeatherForecastService.GetWeatherForecastMessage();
@@ -16,10 +16,10 @@ public static class DailyMessageService
                      $"{DateTime.Now:dd/MM/yy}\n\n" +
                      $"{weatherForecastMessage}\n\n" +
                      $"{horoscopeMessage}\n\n" +
-                     $"{todaysPhrase}\n\n" +
+                     $"{todaysPhraseMessage}\n\n" +
                      $"{holidayMessage}\n\n" +
                      $"{currenciesMessage}\n\n" +
-                     $"{news}\n";
+                     $"{newsMessage}\n";
 
         return message;
     }

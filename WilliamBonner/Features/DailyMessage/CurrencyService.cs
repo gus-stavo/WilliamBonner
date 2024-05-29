@@ -37,7 +37,6 @@ public class CurrencyService
         }
         else
         {
-
             return $"{currency.bid} ({formattedVarBid}%) 📉";
         }
     }
